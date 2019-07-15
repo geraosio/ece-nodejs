@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const metrics = require('./metrics.js')
+const metrics = require('./routes/metrics.js')
 
 const app = express()
 const port = 8080
@@ -23,6 +23,16 @@ app.get('/hello/:name', function(req, res) {
   }
 })
 
+app.get('/metrics.json', (req, res) => {
+  metrics.get((err, data) => {
+    if (err) {
+      throw err
+    }
+    res.status(200).json(data)
+  })
+})
+
+
 app.use(function (res, res, next) {
   res.status(404).send("Sorry can't find that!")
 })
@@ -32,12 +42,6 @@ app.use(function (err, req, res, next) {
   res.status(500).send("Something broke!")
 })
 
-app.get('/metrics.json', (req, res) => {
-  metrics.get((err, data) => {
-    if (err) throw err
-    res.status(200).json(data)
-  })
-})
 
 app.listen(port,
   () => console.log(`server listening on ${port}!`)
