@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/geraosio/ece-nodejs/issues"
   },
-  "homepage": "https://github.com/geraosio/ece-nodejs#readme"
+  "homepage": "https://github.com/geraosio/ece-nodejs#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
