@@ -5,7 +5,7 @@ const metrics = require('./metrics.js')
 const app = express()
 const port = 8080
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static('public'))
 
 app.set('views', __dirname + "/views")
 app.set('view engine', 'ejs')
@@ -30,6 +30,13 @@ app.use(function (res, res, next) {
 app.use(function (err, req, res, next) {
   console.error(err.stack);
   res.status(500).send("Something broke!")
+})
+
+app.get('/metrics.json', (req, res) => {
+  metrics.get((err, data) => {
+    if (err) throw err
+    res.status(200).json(data)
+  })
 })
 
 app.listen(port,
