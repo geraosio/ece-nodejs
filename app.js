@@ -3,9 +3,8 @@ const express = require('express')
 const app = express()
 const port = 8080
 
-app.listen(port,
-  () => console.log(`server listening on ${port}!`)
-)
+app.set('views', __dirname + "/views")
+app.set('view engine', 'ejs')
 
 app.get('/', function(req, res) {
   res.send(`
@@ -19,7 +18,7 @@ app.get('/hello/:name', function(req, res) {
   if (req.params.name == "Gerardo") {
     res.send("Hello my name is Gerardo Osio. I'm studying at ECE!")
   } else {
-    res.send('Hello ' + req.params.name)
+    res.render('hello.ejs', {name: req.params.name})
   }
 })
 
@@ -31,3 +30,7 @@ app.use(function (err, req, res, next) {
   console.error(err.stack);
   res.status(500).send("Something broke!")
 })
+
+app.listen(port,
+  () => console.log(`server listening on ${port}!`)
+)
