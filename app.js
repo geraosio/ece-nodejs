@@ -1,24 +1,25 @@
 const express = require('express')
+const path = require('path')
+const metrics = require('./metrics.js')
 
 const app = express()
 const port = 8080
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.set('views', __dirname + "/views")
 app.set('view engine', 'ejs')
 
 app.get('/', function(req, res) {
-  res.send(`
-    This app says hello, and if you tell it your name it sends a personalized message.\n
-    To begin go to the path /hello/YourName.\n
-    If you want to use spaces in your name you need to use %20 instead of the whitespace. For example to write John Doe you need to put John%20Doe.
-  `)
+  res.render('pages/index')
 })
 
 app.get('/hello/:name', function(req, res) {
   if (req.params.name == "Gerardo") {
+    res.render('')
     res.send("Hello my name is Gerardo Osio. I'm studying at ECE!")
   } else {
-    res.render('hello.ejs', {name: req.params.name})
+    res.render('pages/hello', {name: req.params.name})
   }
 })
 
