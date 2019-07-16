@@ -1,11 +1,22 @@
 import express = require('express')
-import { MetricsHandler } from './metrics'
+import { Metric, MetricsHandler } from './metrics'
 import mongodb from 'mongodb'
 
 const path = require('path')
 const app = express()
 const port: string = process.env.PORT || '8080'
 const MongoClient = mongodb.MongoClient // Create a new MongoClient
+const bodyparser = require('body-parser')
+
+// APP USE & SET
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.set('views', __dirname + "/views")
+app.set('view engine', 'ejs')
+
+app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({extended: true}))
 
 //
 // DB
@@ -24,13 +35,6 @@ MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err:
     console.log(`server is listening on port ${port}`)
   })
 })
-
-// APP USE & SET
-
-app.use(express.static(path.join(__dirname, 'public')))
-
-app.set('views', __dirname + "/views")
-app.set('view engine', 'ejs')
 
 //
 // GET
@@ -58,6 +62,22 @@ app.get('/hello/:name', (req:any, res:any) => {
 })
 
 //
+// POST
+//
+
+app.post('/metrics', (req: any, res: any) => {
+  if (req.body) {
+    const metric = new Metric("Metric", parseInt(req.body.value))
+    new MetricsHandler(db).save(metric, (err: any, result: any) => {
+      if (err) return res.status(500).json({error: err, result: result})
+      res.status(201).json({error: err, result: true})
+    })
+  } else {
+    return res.status(400).json({error: 'Wrong request parameter',})
+  }
+})
+
+//
 // ERRORS
 //
 
@@ -73,10 +93,10 @@ app.use(function (err: any, req: any, res: any, next: any) {
 //
 // LISTEN
 //
-
-app.listen(port, (err: Error) => {
-  if (err) {
-    throw err
-  }
-  console.log(`server is listening on port ${port}`)
-})
+// Commented becuase we are now listening from the MongoClient.connect function
+// app.listen(port, (err: Error) => {
+//   if (err) {
+//     throw err
+//   }
+//   console.log(`server is listening on port ${port}`)
+// })

@@ -9,6 +9,23 @@ export class Metric {
 }
   
 export class MetricsHandler {
+  private db: any
+  
+  constructor(db: any) {
+    this.db = db
+  }
+  
+  public save(metric: Metric, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.db.collection('documents')
+    
+    // Insert some document
+    collection.insertOne(metric, function(err: any, result: any) {
+      if (err) return callback(err, result)
+      console.log("Document inserted into the collection")
+      callback(err, result)
+    })
+  }
+  
   static get(callback: (error: Error | null, result?: Metric[]) => void) {
     const result = [
       new Metric('2013-11-04 14:00 UTC', 12),
