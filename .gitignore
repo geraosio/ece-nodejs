@@ -1,5 +1,7 @@
 # Gitignore for Node.js
 
+dist/
+
 # Logs
 logs
 *.log
