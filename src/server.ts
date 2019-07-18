@@ -12,21 +12,45 @@ const MongoClient = mongodb.MongoClient // Create a new MongoClient
 const bodyparser = require('body-parser')
 const MongoStore = ConnectMongo(session)
 const dbUser = new UserHandler(db)
-const authRouter = express.Router()
+const userRouter = express.Router()
+const userCheck = function (req: any, res: any, next: any) {
+  if (req.session.loggedIn) {
+    next()
+  } else {
+    res.redirect('/login')
+  }
+}
 
 //
-// AUTH ROUTER
+// USER ROUTER
 //
 
-authRouter.get('/login', function (req: any, res: any) {
+// User creation and retrieval
+userRouter.post('/', function (req: any, res: any, next: any) {
+  dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
+    if (err) next(err)
+    if (result) {
+      res.status(409).send("user already exists")
+    } else {
+      dbUser.save(req.body, function (err: Error | null) {
+        if (err)
+          next(err)
+        else
+          res.status(201).send("user persisted")
+      })
+    }
+  })
+})
+
+userRouter.get('/login', function (req: any, res: any) {
   res.render('user/login')
 })
 
-authRouter.get('/signup', function (req: any, res: any) {
+userRouter.get('/signup', function (req: any, res: any) {
   res.render('user/signup')
 })
 
-authRouter.get('/logout', function (req: any, res: any) {
+userRouter.get('/logout', function (req: any, res: any) {
   if (req.session.loggedIn) {
     delete req.session.loggedIn
     delete req.session.user
@@ -34,7 +58,7 @@ authRouter.get('/logout', function (req: any, res: any) {
   res.redirect('/login')
 })
 
-authRouter.post('/login', function (req: any, res: any, next: any) {
+userRouter.post('/login', function (req: any, res: any, next: any) {
   dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
     if (err) next(err)
     if (result === null || !result.validatePassword(req.body.password)) {
@@ -63,7 +87,7 @@ app.use(session({
   saveUninitialized: true,
   store: new MongoStore({ url: 'mongodb://localhost/mydb'})
 }))
-app.use(authRouter)
+app.use(userRouter)
 
 //
 // DB
@@ -88,8 +112,8 @@ MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err:
 // GET
 //
 
-app.get('/', (req: any, res: any) => {
-  res.render('pages/index')
+app.get('/', userCheck, (req: any, res: any) => {
+  res.render('pages/index', {name: req.params.name})
 })
 
 app.get('/metrics', (req: any, res: any) => {
