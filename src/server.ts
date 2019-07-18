@@ -65,7 +65,7 @@ app.get('/documents', (req: any, res: any) => {
   if (req.body) {
     new MetricsHandler(db).getAll((err: any, docs: any) => {
       if (err) console.log(err)
-      res.send(docs)
+      res.render('pages/documents', { documents: docs })
       console.log(docs)
     })
   }

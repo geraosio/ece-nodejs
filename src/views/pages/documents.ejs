@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <main class="container mt-4">
+      <div class="alerts-container"></div>
+      <div class="documents-container">
+        <% documents.forEach(function(document) { %>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><%= document.value %></h5>
+              <a href=<%= "/documents/" + document.value %> class="card-link link-danger" id="delete-document" data-value=<%= document.value %>>Delete</a>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted"><%= new Date(parseInt(document.timestamp)) %></small>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </main>
+    
+    <script src="../javascripts/documents.js" charset="utf-8"></script>
+  </body>
+</html>

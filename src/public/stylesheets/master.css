@@ -1,0 +1,11 @@
+.documents-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+}
+
+.link-danger {
+  color: #c82333;
+}
