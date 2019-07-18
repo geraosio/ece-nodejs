@@ -33,4 +33,31 @@ export class MetricsHandler {
     ]
     callback(null, result)
   }
+  
+  public getAll(callback: any) {
+    const collection = this.db.collection('documents')
+    
+    collection.find({}).toArray(function(err: any, docs: object) {
+      if (err) throw err
+      callback(err, docs)
+    })
+  }
+  
+  public getFromValue(query: object, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.db.collection('documents')
+    
+    collection.find(query).toArray(function(err: any, docs: object) {
+      if (err) throw err
+      callback(err, docs);
+    })
+  }
+  
+  public deleteFromValue(query: object, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.db.collection('documents')
+    
+    collection.remove(query, function(err: any, docs: object) {
+      if (err) throw err
+      callback(err, docs);
+    })
+  }
 }

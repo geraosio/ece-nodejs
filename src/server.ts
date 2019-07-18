@@ -61,6 +61,26 @@ app.get('/hello/:name', (req:any, res:any) => {
   }
 })
 
+app.get('/documents', (req: any, res: any) => {
+  if (req.body) {
+    new MetricsHandler(db).getAll((err: any, docs: any) => {
+      if (err) console.log(err)
+      res.send(docs)
+      console.log(docs)
+    })
+  }
+})
+
+app.get('/documents/:value', (req: any, res: any) => {
+  if (req.body) {
+    new MetricsHandler(db).getFromValue({'value': parseInt(req.params.value)}, (err: any, result: any) => {
+      if (err) console.log(err)
+      res.send(result)
+      console.log(result)
+    })
+  }
+})
+
 //
 // POST
 //
@@ -74,6 +94,20 @@ app.post('/metrics', (req: any, res: any) => {
     })
   } else {
     return res.status(400).json({error: 'Wrong request parameter',})
+  }
+})
+
+//
+// DELETE
+//
+
+app.delete('/documents/:value', (req: any, res: any) => {
+  if (req.body) {
+    new MetricsHandler(db).deleteFromValue({'value': parseInt(req.params.value)}, (err: any, result: any) => {
+      if (err) console.log(err)
+      res.send(result)
+      console.log(result)
+    })
   }
 })
 
