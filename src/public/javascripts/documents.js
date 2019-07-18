@@ -1,7 +1,7 @@
 window.onload = function() {
   var deletedDocument = sessionStorage.getItem("deletedDocument")
   if (deletedDocument) {
-    $('.alerts-container').append($('<div class="alert alert-success" role="alert">' + deletedDocument + ' has been deleted.' + '</div>'))
+    $('.alerts-container').append($('<div class="alert alert-success" role="alert">Document with value ' + deletedDocument + ' has been deleted.' + '</div>'))
     sessionStorage.removeItem("deletedDocument")
   }
 }
