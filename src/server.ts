@@ -11,6 +11,42 @@ const port: string = process.env.PORT || '8080'
 const MongoClient = mongodb.MongoClient // Create a new MongoClient
 const bodyparser = require('body-parser')
 const MongoStore = ConnectMongo(session)
+const dbUser = new UserHandler(db)
+const authRouter = express.Router()
+
+//
+// AUTH ROUTER
+//
+
+authRouter.get('/login', function (req: any, res: any) {
+  res.render('user/login')
+})
+
+authRouter.get('/signup', function (req: any, res: any) {
+  res.render('user/signup')
+})
+
+authRouter.get('/logout', function (req: any, res: any) {
+  if (req.session.loggedIn) {
+    delete req.session.loggedIn
+    delete req.session.user
+  }
+  res.redirect('/login')
+})
+
+authRouter.post('/login', function (req: any, res: any, next: any) {
+  dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
+    if (err) next(err)
+    if (result === null || !result.validatePassword(req.body.password)) {
+      console.log('login')
+      res.redirect('/login')
+    } else {
+      req.session.loggedIn = true
+      req.session.user = result
+      res.redirect('/')
+    }
+  })
+})
 
 // APP USE & SET
 
@@ -27,19 +63,18 @@ app.use(session({
   saveUninitialized: true,
   store: new MongoStore({ url: 'mongodb://localhost/mydb'})
 }))
+app.use(authRouter)
 
 //
 // DB
 //
 
 var db: any
-var dbUser: any
 
 MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err: any, client: any) => {
   if (err) throw err
   
   db = client.db('mydb')
-  dbUser = new UserHandler(db)
   
   // Start the application after the databse connection is ready
   const port: string = process.env.PORT || '8115'
