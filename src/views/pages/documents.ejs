@@ -8,7 +8,7 @@
       <div class="alerts-container"></div>
       <div class="documents-container">
         <% documents.forEach(function(document) { %>
-          <div class="card">
+          <div class="card mb-2">
             <div class="card-body">
               <h5 class="card-title"><%= document.value %></h5>
               <a href=<%= "/documents/" + document.value %> class="card-link link-danger" id="delete-document" data-value=<%= document.value %>>Delete</a>
