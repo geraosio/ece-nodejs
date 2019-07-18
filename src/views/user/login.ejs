@@ -5,7 +5,22 @@
   </head>
   <body>
     <main class="container">
-      <button type="button" class="btn btn-primary">Button</button>
+      
+      <div class="form-container" id="form">
+        <p>Please login to your account</p>
+        <form class="/login" method="post">
+          <div class="form-group">
+            <label for="form-username">Username</label>
+            <input id="form-username" type="text" name="username" />
+          </div>
+          <div class="form-group">
+            <label for="form-password">Password</label>
+            <input id="form-password" type="password" name="password" />
+          </div>
+          <button class="btn btn-primary" type="submit" value="Submit">Connect</button>
+        </form>
+        <button class="btn btn-success btn-block" type="submit" href="/signup" onClick="document.location.href='/signup'">I don't have an account</button>
+      </div>
     </main>
   </body>
 </html>
