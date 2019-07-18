@@ -8,11 +8,13 @@
       <% include ../partials/header %>
     </header>
     <main class="container">
-      <p>
+      <h3>Hello <%= name %></h3>
+      <%# <p>
         This app says hello, and if you tell it your name it sends a personalized message.<br>
         To begin go to the path /hello/YourName.<br>
         If you want to use spaces in your name you need to use %20 instead of the whitespace. For example to write John Doe you need to put John%20Doe.
-      </p>
+      </p> %>
+      <button class="btn btn-danger" href="/logout" onClick="document.location.href='/logout'">Logout</button>
     </main>
     <footer>
       <% include ../partials/footer %>
