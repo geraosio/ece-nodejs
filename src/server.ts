@@ -1,12 +1,16 @@
 import express = require('express')
 import { Metric, MetricsHandler } from './metrics'
 import mongodb from 'mongodb'
+import { User, UserHandler } from './user'
+import session = require('express-session')
+import ConnectMongo = require('connect-mongo')
 
 const path = require('path')
 const app = express()
 const port: string = process.env.PORT || '8080'
 const MongoClient = mongodb.MongoClient // Create a new MongoClient
 const bodyparser = require('body-parser')
+const MongoStore = ConnectMongo(session)
 
 // APP USE & SET
 
@@ -17,16 +21,25 @@ app.set('view engine', 'ejs')
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended: true}))
+app.use(session({
+  secret: 'user session',
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({ url: 'mongodb://localhost/mydb'})
+}))
 
 //
 // DB
 //
 
 var db: any
+var dbUser: any
 
 MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err: any, client: any) => {
   if (err) throw err
+  
   db = client.db('mydb')
+  dbUser = new UserHandler(db)
   
   // Start the application after the databse connection is ready
   const port: string = process.env.PORT || '8115'
