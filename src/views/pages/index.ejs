@@ -31,7 +31,7 @@
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title"><%= metric.value %></h5>
-                <a href=<%= "/metrics/" + metric.timestamp %> class="card-link link-danger" id="delete-metric" data-value=<%= metric.value %>>Delete</a>
+                <a href=<%= "/metrics/" + metric.timestamp %> class="card-link btn-delete" id="delete-metric" data-value=<%= metric.value %>>Delete</a>
               </div>
               <div class="card-footer">
                 <small class="text-muted">Created <%= moment(parseInt(metric.timestamp)).fromNow() %></small>

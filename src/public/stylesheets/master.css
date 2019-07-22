@@ -39,12 +39,12 @@
   align-self: center;
 }
 
-.btn-delete-user {
+.btn-delete {
   color: rgb(255, 0, 0);
   font-size: 0.75em;
 }
 
-.btn-delete-user:hover, .btn-delete-user:active {
+.btn-delete:hover, .btn-delete:active {
   color: rgb(255, 92, 92);
 }
 
@@ -100,6 +100,10 @@
   display: inline-block;
 }
 
+.metrics-all-container .btn-delete {
+  font-size: 1em;
+}
+
 
 
 
@@ -113,8 +117,4 @@
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-content: space-between;
-}
-
-.link-danger {
-  color: #c82333;
 }
