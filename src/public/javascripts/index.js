@@ -1,5 +1,5 @@
 
-$('#refresh-chart').click((e) => {
+$('#show-chart').click((e) => {
   e.preventDefault();
   
   $.getJSON("/metrics", {}, (data) => {
