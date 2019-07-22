@@ -79,6 +79,31 @@ userRouter.post('/', function (req: any, res: any, next: any) {
   })
 })
 
+userRouter.post('/signup', function (req: any, res: any, next: any) {
+  dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
+    if (err) next(err)
+    if (result) {
+      res.status(409).send("User already exists")
+    } else {
+      dbUser.save(req.body, function (err: Error | null) {
+        if (err)
+          next(err)
+        else
+          res.redirect('/')
+      })
+    }
+  })
+})
+
+userRouter.get('/:username', (req: any, res: any, next: any) => {
+  dbUser.get(req.params.username, function (err: Error | null, result: User | null) {
+    if (err || result === undefined)
+      res.status(404).send("User not found!")
+    else
+      res.status(200).json(result)
+  })
+})
+
 // APP USE & SET
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -94,8 +119,8 @@ app.use(session({
   saveUninitialized: true,
   store: new MongoStore({ url: 'mongodb://localhost/mydb'})
 }))
-app.use(userRouter)
 app.use(authRouter)
+app.use(userRouter)
 
 //
 // DB

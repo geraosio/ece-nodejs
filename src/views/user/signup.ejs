@@ -5,7 +5,30 @@
   </head>
   <body>
     <main class="container">
-      <button type="button" class="btn btn-primary">Button</button>
+      
+      <div class="form-container" id="form">
+        <p>Enter your information to create an account</p>
+        <form class="/signup" method="post">
+          <div class="form-group">
+            <label for="form-username">Username</label>
+            <input id="form-username" type="text" name="username" />
+          </div>
+          <div class="form-group">
+            <label for="form-email">Email</label>
+            <input id="form-email" type="email" name="email" />
+          </div>
+          <div class="form-group">
+            <label for="form-password">Password</label>
+            <input id="form-password" type="password" name="password" />
+          </div>
+          <div class="form-group">
+            <label for="form-password-confirmation">Re-enter password</label>
+            <input id="form-password-confirmation" type="password" name="password-confirmation" />
+          </div>
+          <button class="btn btn-primary" type="submit" value="Submit">Signup</button>
+        </form>
+        <button class="btn btn-success btn-block" type="submit" href="/login" onClick="document.location.href='/login'">I already have an account</button>
+      </div>
     </main>
   </body>
 </html>
