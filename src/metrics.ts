@@ -54,10 +54,11 @@ export class MetricsHandler {
     });
   }
   
-  public delete(timestamp: any, callback: (err: Error | null, result?: any) => void) {
+  // TODO: Can only delete the most recent metric
+  public deleteFromUser(username: string, timestamp: any, callback: (err: Error | null, result?: any) => void) {
     const collection = this.db.collection('users')
     
-    collection.remove({"timestamp": timestamp}, function(err: any, result: any) {
+    collection.update({username: username}, { $pull: { metrics : { timestamp: timestamp } } }, function(err: any, result: any) {
         if (err) return callback(err, result)
         console.log("Metric with timestamp " + timestamp + " deleted from the current user")
         callback(err, result)

@@ -198,7 +198,7 @@ app.post('/delete_current_user', (req: any, res: any) => {
 
 app.delete('/metrics/:timestamp', (req: any, res: any) => {
   if (req.session.user) {
-    new MetricsHandler(db).delete(req.params.timestamp, (err: any, result: any) => {
+    new MetricsHandler(db).deleteFromUser(req.session.user.username, req.params.timestamp, (err: any, result: any) => {
       if (err) res.status(500).json({error: err, result: result})
       console.log(result)
       res.redirect('/')
