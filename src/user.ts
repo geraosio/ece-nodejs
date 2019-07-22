@@ -43,7 +43,6 @@ export class UserHandler {
   public get(username: string, callback: (err: Error | null, result: User | null) => void) {
     const collection = this.database.collection('users')
     
-    // Find some documents
     collection.findOne({username: username}, function(err: any, result: any) {
       if (err) return callback(err, result)
       if (result)
@@ -56,11 +55,20 @@ export class UserHandler {
   public save(user: User, callback: (err: Error | null) => void) {
     const collection = this.database.collection('users')
     
-    // Insert some document
     collection.insertOne(user, function (err: any, result: any) {
       if (err) return callback(err)
       console.log("User inserted into the collection")
       callback(err)
+    })
+  }
+  
+  public delete(username: string, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.database.collection('users')
+    
+    collection.removeOne({username: username}, function (err: any, result: any) {
+      if (err) return callback(err, result)
+      console.log("User " + username + " deleted from database")
+      callback(err, result)
     })
   }
 }

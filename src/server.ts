@@ -207,6 +207,17 @@ app.post('/metrics', (req: any, res: any) => {
   }
 })
 
+app.post('/delete_current_user', (req: any, res: any) => {
+  var username = req.session.user.username
+  new MetricsHandler(db).delete(username, (err: any, result: any) => {
+    if (err) console.log("There was an error with the deletion of the user " + username)
+  })
+  new UserHandler(db).delete(username, (err: any, result: any) => {
+    if (err) res.status(201).json({error: err, result: true})
+  })
+  res.redirect('/logout')
+})
+
 //
 // DELETE
 //

@@ -62,6 +62,16 @@ export class MetricsHandler {
     })
   }
   
+  public delete(metric: Metric, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.db.collection('users')
+    
+    collection.removeOne({value: metric.value}, function(err: any, result: any) {
+        if (err) return callback(err, result)
+        console.log("Metrics deleted from the current user")
+        callback(err, result)
+    });
+  }
+  
   public deleteFromValue(query: object, callback: (err: Error | null, result?: any) => void) {
     const collection = this.db.collection('documents')
     
