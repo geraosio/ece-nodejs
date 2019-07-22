@@ -4,30 +4,28 @@
     <% include ../partials/head %>
   </head>
   <body>
-    <main class="container">
-      
-      <div class="form-container" id="form">
-        <p>Enter your information to create an account</p>
+    <main class="authentication-form text-center">
+      <div class="form-container">
+        <h2>Signup</h2>
+        <p>Enter your information to create an account.</p>
         <form class="/signup" method="post">
           <div class="form-group">
-            <label for="form-username">Username</label>
-            <input id="form-username" type="text" name="username" />
+            <label class="sr-only" for="form-username">Username</label>
+            <input id="form-username" class="form-control" type="text" name="username" placeholder="Username" />
           </div>
           <div class="form-group">
-            <label for="form-email">Email</label>
-            <input id="form-email" type="email" name="email" />
+            <label class="sr-only" for="form-email">Email</label>
+            <input id="form-email" type="email" name="email" class="form-control" placeholder="Email" />
           </div>
           <div class="form-group">
-            <label for="form-password">Password</label>
-            <input id="form-password" type="password" name="password" />
+            <label class="sr-only" for="form-password">Password</label>
+            <input class="form-control" id="form-password" type="password" name="password" placeholder="Password" />
+            <label class="sr-only" for="form-password-confirmation">Re-enter password</label>
+            <input class="form-control" id="form-password-confirmation" type="password" name="password-confirmation" placeholder="Confirm Password" />
           </div>
-          <div class="form-group">
-            <label for="form-password-confirmation">Re-enter password</label>
-            <input id="form-password-confirmation" type="password" name="password-confirmation" />
-          </div>
-          <button class="btn btn-primary" type="submit" value="Submit">Signup</button>
+          <button class="btn btn-primary" type="submit" value="Submit">Register</button>
         </form>
-        <button class="btn btn-success btn-block" type="submit" href="/login" onClick="document.location.href='/login'">I already have an account</button>
+        <button class="btn btn-link" type="submit" href="/login" onClick="document.location.href='/login'">I already have an account</button>
       </div>
     </main>
   </body>
