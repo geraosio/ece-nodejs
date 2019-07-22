@@ -1,5 +1,8 @@
 # Gitignore for Node.js
 
+# macOS
+.DS_STORE
+
 dist/
 
 # Logs
