@@ -1,0 +1,14 @@
+<nav class="navbar navbar-light bg-light ">
+  <div class="navbar-username">
+    <span>Signed in as:</span>
+    <h4><%= user.username %></h4>
+  </div>
+  
+  <div class="navbar-links">
+    <button class="btn btn-link" id="refresh-chart">Show chart</button>
+    <button class="btn btn-link btn-logout" href="/logout" onClick="document.location.href='/logout'">Logout</button>
+    <form action="/delete_current_user" method="post">
+      <button class="btn btn-link btn-delete-user" type="submit">Delete Account</button>
+    </form>
+  </div>
+</nav>
