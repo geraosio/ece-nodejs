@@ -81,6 +81,7 @@
 .metrics-container {
   display: flex;
   flex-direction: row;
+  margin-bottom: 1em;
 }
 
 .metrics-new {
@@ -95,7 +96,6 @@
 }
 
 .metrics-all-container .card {
-  width: 150px;
   margin-right: 1em;
   display: inline-block;
 }
