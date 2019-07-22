@@ -22,7 +22,7 @@ export class MetricsHandler {
     var insertionQuery = { $push: {"metrics": metric}}
     collection.updateOne({username: username}, insertionQuery, function(err: any, result: any) {
       if (err) return callback(err, result)
-      console.log("Metric saved in user data")
+      console.log("Metric with value " + metric.value + " saved to user " + username + ".")
       callback(err, result)
     })
   }
@@ -49,9 +49,9 @@ export class MetricsHandler {
     const collection = this.db.collection('users')
     
     collection.find({username: username}).toArray(function(err: any, result: object) {
-      if (err) return callback(err, result)
-      callback(err, result)
-    })
+        if(err) return callback(err, result)
+        callback(err, result)
+    });
   }
   
   public delete(metric: Metric, callback: (err: Error | null, result?: any) => void) {

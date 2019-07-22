@@ -8,3 +8,8 @@
 .link-danger {
   color: #c82333;
 }
+
+.metrc-value-form {
+  display: flex;
+  align-items: center;
+}

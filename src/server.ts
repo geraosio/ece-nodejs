@@ -46,7 +46,7 @@ authRouter.post('/login', function (req: any, res: any, next: any) {
   dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
     if (err) next(err)
     if (result === null || !result.validatePassword(req.body.password)) {
-      console.log('login')
+      console.log(req.body.username + " succesfully logged in!")
       res.redirect('/login')
     } else {
       req.session.loggedIn = true
@@ -92,15 +92,6 @@ userRouter.post('/signup', function (req: any, res: any, next: any) {
           res.redirect('/')
       })
     }
-  })
-})
-
-userRouter.get('/:username', (req: any, res: any, next: any) => {
-  dbUser.get(req.params.username, function (err: Error | null, result: User | null) {
-    if (err || result === undefined)
-      res.status(404).send("User not found!")
-    else
-      res.status(200).json(result)
   })
 })
 
@@ -155,9 +146,7 @@ app.get('/metrics', (req: any, res: any) => {
   if (req.session.user) {
     new MetricsHandler(db).getFromUser(req.session.user.username, (err: any, result: any) => {
       if (err) res.status(500).json({error: err, result: result})
-      console.log(result)
       res.status(201).json({error: err, result: result})
-      // res.render('pages/documents', { documents: docs })
     })
   } else {
     res.redirect('/login')
@@ -180,7 +169,7 @@ app.get('/documents/:value', (req: any, res: any) => {
 
 app.post('/metrics', (req: any, res: any) => {
   if (req.body) {
-    const metric = new Metric(new Date().getTime().toString(), parseInt(req.body.value))
+    const metric = new Metric(new Date().getTime().toString(), parseInt(req.body.metric_value))
     new MetricsHandler(db).save(metric, req.session.user.username, (err: any, result: any) => {
       if (err) return res.status(500).json({error: err, result: result})
       res.status(201).redirect('/')
@@ -214,6 +203,15 @@ app.delete('/metrics', (req: any, res: any) => {
     })
   }
 })
+
+// userRouter.get('/:username', (req: any, res: any, next: any) => {
+//   dbUser.get(req.params.username, function (err: Error | null, result: User | null) {
+//     if (err || result === undefined)
+//       res.status(404).send("User not found!")
+//     else
+//       res.status(200).json(result)
+//   })
+// })
 
 //
 // ERRORS

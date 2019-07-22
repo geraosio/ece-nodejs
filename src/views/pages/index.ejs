@@ -7,16 +7,32 @@
     <header>
       <% include ../partials/header %>
     </header>
+    
     <main class="container">
       <h3>Hello <%= user.username %></h3>
       <h5>email: <%= user.email %></h5>
+      
+      <form class="metrc-value-form" action="/metrics" method="post">
+        <div class="form-group mb-0">
+          <label class="mb-0" for="form-metric-value">Metric Value:</label>
+          <input id="form-metric-value" type="text" name="metric_value" />
+        </div>
+        <button class="btn btn-primary" type="submit">Add Metric</button>
+      </form>
+      
       <button class="btn btn-danger" href="/logout" onClick="document.location.href='/logout'">Logout</button>
       <form action="/delete_current_user" method="post">
         <button class="btn btn-danger btn-sm" type="submit">Delete Account</button>
       </form>
+      <button class="btn btn-primary" id="refresh-chart">Show chart</button>
+      
+      <canvas id="myChart" width="400" height="400"></canvas>
     </main>
+    
     <footer>
       <% include ../partials/footer %>
     </footer>
+    
+    <script src="../javascripts/index.js" charset="utf-8"></script>
   </body>
 </html>
