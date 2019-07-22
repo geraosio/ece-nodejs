@@ -15,13 +15,14 @@ export class MetricsHandler {
     this.db = db
   }
   
-  public save(metric: Metric, callback: (err: Error | null, result?: any) => void) {
-    const collection = this.db.collection('documents')
+  public save(metric: Metric, username: string, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.db.collection('users')
     
     // Insert some document
-    collection.insertOne(metric, function(err: any, result: any) {
+    var insertionQuery = { $push: {"metrics": metric}}
+    collection.updateOne({username: username}, insertionQuery, function(err: any, result: any) {
       if (err) return callback(err, result)
-      console.log("Document inserted into the collection")
+      console.log("Metric saved in user data")
       callback(err, result)
     })
   }
@@ -49,6 +50,15 @@ export class MetricsHandler {
     collection.find(query).toArray(function(err: any, docs: object) {
       if (err) throw err
       callback(err, docs);
+    })
+  }
+  
+  public getMetricsFromUser(username: string, callback: (err: Error | null, result?: any) => void) {
+    const collection = this.db.collection('users')
+    
+    collection.find({username: username}).toArray(function(err: any, result: object) {
+      if (err) return callback(err, result)
+      callback(err, result)
     })
   }
   

@@ -11,7 +11,7 @@ const port: string = process.env.PORT || '8080'
 const MongoClient = mongodb.MongoClient // Create a new MongoClient
 const bodyparser = require('body-parser')
 const MongoStore = ConnectMongo(session)
-const dbUser = new UserHandler(db)
+const authRouter = express.Router()
 const userRouter = express.Router()
 const userCheck = function (req: any, res: any, next: any) {
   if (req.session.loggedIn) {
@@ -20,6 +20,43 @@ const userCheck = function (req: any, res: any, next: any) {
     res.redirect('/login')
   }
 }
+
+//
+// AUTH ROUTER
+//
+
+
+authRouter.get('/login', function (req: any, res: any) {
+  res.render('user/login')
+})
+
+authRouter.get('/signup', function (req: any, res: any) {
+  res.render('user/signup')
+})
+
+authRouter.get('/logout', function (req: any, res: any) {
+  if (req.session.loggedIn) {
+    delete req.session.loggedIn
+    delete req.session.user
+  }
+  res.redirect('/login')
+})
+
+authRouter.post('/login', function (req: any, res: any, next: any) {
+  dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
+    if (err) next(err)
+    if (result === null || !result.validatePassword(req.body.password)) {
+      console.log('login')
+      res.redirect('/login')
+    } else {
+      req.session.loggedIn = true
+      req.session.user = result
+      res.redirect('/')
+    }
+  })
+})
+
+
 
 //
 // USER ROUTER
@@ -42,36 +79,6 @@ userRouter.post('/', function (req: any, res: any, next: any) {
   })
 })
 
-userRouter.get('/login', function (req: any, res: any) {
-  res.render('user/login')
-})
-
-userRouter.get('/signup', function (req: any, res: any) {
-  res.render('user/signup')
-})
-
-userRouter.get('/logout', function (req: any, res: any) {
-  if (req.session.loggedIn) {
-    delete req.session.loggedIn
-    delete req.session.user
-  }
-  res.redirect('/login')
-})
-
-userRouter.post('/login', function (req: any, res: any, next: any) {
-  dbUser.get(req.body.username, function (err: Error | null, result: User | null) {
-    if (err) next(err)
-    if (result === null || !result.validatePassword(req.body.password)) {
-      console.log('login')
-      res.redirect('/login')
-    } else {
-      req.session.loggedIn = true
-      req.session.user = result
-      res.redirect('/')
-    }
-  })
-})
-
 // APP USE & SET
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -88,17 +95,20 @@ app.use(session({
   store: new MongoStore({ url: 'mongodb://localhost/mydb'})
 }))
 app.use(userRouter)
+app.use(authRouter)
 
 //
 // DB
 //
 
 var db: any
+var dbUser: any
 
 MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err: any, client: any) => {
   if (err) throw err
   
   db = client.db('mydb')
+  dbUser = new UserHandler(db)
   
   // Start the application after the databse connection is ready
   const port: string = process.env.PORT || '8115'
@@ -133,13 +143,16 @@ app.get('/hello/:name', (req:any, res:any) => {
   }
 })
 
-app.get('/documents', (req: any, res: any) => {
-  if (req.body) {
-    new MetricsHandler(db).getAll((err: any, docs: any) => {
-      if (err) console.log(err)
-      res.render('pages/documents', { documents: docs })
-      console.log(docs)
+app.get('/metrics', (req: any, res: any) => {
+  if (req.session.user) {
+    new MetricsHandler(db).getMetricsFromUser(req.session.user.username, (err: any, result: any) => {
+      if (err) res.status(500).json({error: err, result: result})
+      console.log(result)
+      res.status(201).json({error: err, result: result})
+      // res.render('pages/documents', { documents: docs })
     })
+  } else {
+    res.redirect('/login')
   }
 })
 
@@ -159,10 +172,10 @@ app.get('/documents/:value', (req: any, res: any) => {
 
 app.post('/metrics', (req: any, res: any) => {
   if (req.body) {
-    const metric = new Metric("Metric", parseInt(req.body.value))
-    new MetricsHandler(db).save(metric, (err: any, result: any) => {
+    const metric = new Metric(new Date().getTime().toString(), parseInt(req.body.value))
+    new MetricsHandler(db).save(metric, req.session.user.username, (err: any, result: any) => {
       if (err) return res.status(500).json({error: err, result: result})
-      res.status(201).json({error: err, result: true})
+      res.status(201).redirect('/')
     })
   } else {
     return res.status(400).json({error: 'Wrong request parameter',})
@@ -173,10 +186,10 @@ app.post('/metrics', (req: any, res: any) => {
 // DELETE
 //
 
-app.delete('/documents/:value', (req: any, res: any) => {
-  if (req.body) {
+app.delete('/metrics', (req: any, res: any) => {
+  if (req.body.value) {
     new MetricsHandler(db).deleteFromValue({'value': parseInt(req.params.value)}, (err: any, result: any) => {
-      if (err) console.log(err)
+      if (err) res.status(500).json({error: err, result: result})
       res.send(result)
       console.log(result)
     })
@@ -195,14 +208,3 @@ app.use(function (err: any, req: any, res: any, next: any) {
   console.error(err.stack);
   res.status(500).send("Something broke!")
 })
-
-//
-// LISTEN
-//
-// Commented becuase we are now listening from the MongoClient.connect function
-// app.listen(port, (err: Error) => {
-//   if (err) {
-//     throw err
-//   }
-//   console.log(`server is listening on port ${port}`)
-// })
