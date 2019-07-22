@@ -152,25 +152,8 @@ app.get('/', userCheck, (req: any, res: any) => {
 })
 
 app.get('/metrics', (req: any, res: any) => {
-  MetricsHandler.get((err: Error | null, result?: any) => {
-    if (err) {
-      throw err
-    }
-    res.json(result)
-  })
-})
-
-app.get('/hello/:name', (req:any, res:any) => {
-  if (req.params.name == "Gerardo") {
-    res.send("Hello my name is Gerardo Osio. I'm studying at ECE!")
-  } else {
-    res.render('pages/hello', {name: req.params.name})
-  }
-})
-
-app.get('/metrics', (req: any, res: any) => {
   if (req.session.user) {
-    new MetricsHandler(db).getMetricsFromUser(req.session.user.username, (err: any, result: any) => {
+    new MetricsHandler(db).getFromUser(req.session.user.username, (err: any, result: any) => {
       if (err) res.status(500).json({error: err, result: result})
       console.log(result)
       res.status(201).json({error: err, result: result})

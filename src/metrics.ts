@@ -27,14 +27,6 @@ export class MetricsHandler {
     })
   }
   
-  static get(callback: (error: Error | null, result?: Metric[]) => void) {
-    const result = [
-      new Metric('2013-11-04 14:00 UTC', 12),
-      new Metric('2013-11-04 14:30 UTC', 15)
-    ]
-    callback(null, result)
-  }
-  
   public getAll(callback: any) {
     const collection = this.db.collection('documents')
     
@@ -53,7 +45,7 @@ export class MetricsHandler {
     })
   }
   
-  public getMetricsFromUser(username: string, callback: (err: Error | null, result?: any) => void) {
+  public getFromUser(username: string, callback: (err: Error | null, result?: any) => void) {
     const collection = this.db.collection('users')
     
     collection.find({username: username}).toArray(function(err: any, result: object) {
