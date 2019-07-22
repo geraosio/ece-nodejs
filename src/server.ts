@@ -123,7 +123,7 @@ MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err:
 //
 
 app.get('/', userCheck, (req: any, res: any) => {
-  res.render('pages/index', {name: req.params.name})
+  res.render('pages/index', {user: req.session.user})
 })
 
 app.get('/metrics', (req: any, res: any) => {
