@@ -4,6 +4,7 @@ import mongodb from 'mongodb'
 import { User, UserHandler } from './user'
 import session = require('express-session')
 import ConnectMongo = require('connect-mongo')
+var moment = require('moment'); // To use Moment JS in index.ejs
 
 const path = require('path')
 const app = express()
@@ -112,6 +113,7 @@ app.use(session({
 }))
 app.use(authRouter)
 app.use(userRouter)
+app.locals.moment = require('moment'); // To use Moment JS in index.ejs
 
 //
 // DB
@@ -139,7 +141,10 @@ MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true}, (err:
 //
 
 app.get('/', userCheck, (req: any, res: any) => {
-  res.render('pages/index', {user: req.session.user})
+  new MetricsHandler(db).getFromUser(req.session.user.username, (err: any, result: any) => {
+    if (err) res.status(500).json({error: err, result: result})
+    res.render('pages/index', {user: req.session.user, metrics: result[0].metrics, moment: moment})
+  })
 })
 
 app.get('/metrics', (req: any, res: any) => {
@@ -181,9 +186,6 @@ app.post('/metrics', (req: any, res: any) => {
 
 app.post('/delete_current_user', (req: any, res: any) => {
   var username = req.session.user.username
-  new MetricsHandler(db).delete(username, (err: any, result: any) => {
-    if (err) console.log("There was an error with the deletion of the user " + username)
-  })
   new UserHandler(db).delete(username, (err: any, result: any) => {
     if (err) res.status(201).json({error: err, result: true})
   })
@@ -194,13 +196,15 @@ app.post('/delete_current_user', (req: any, res: any) => {
 // DELETE
 //
 
-app.delete('/metrics', (req: any, res: any) => {
-  if (req.body.value) {
-    new MetricsHandler(db).deleteFromValue({'value': parseInt(req.params.value)}, (err: any, result: any) => {
+app.delete('/metrics/:timestamp', (req: any, res: any) => {
+  if (req.session.user) {
+    new MetricsHandler(db).delete(req.params.timestamp, (err: any, result: any) => {
       if (err) res.status(500).json({error: err, result: result})
-      res.send(result)
       console.log(result)
+      res.redirect('/')
     })
+  } else {
+    res.redirect('/login')
   }
 })
 

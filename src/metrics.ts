@@ -54,12 +54,12 @@ export class MetricsHandler {
     });
   }
   
-  public delete(metric: Metric, callback: (err: Error | null, result?: any) => void) {
+  public delete(timestamp: any, callback: (err: Error | null, result?: any) => void) {
     const collection = this.db.collection('users')
     
-    collection.removeOne({value: metric.value}, function(err: any, result: any) {
+    collection.remove({"timestamp": timestamp}, function(err: any, result: any) {
         if (err) return callback(err, result)
-        console.log("Metrics deleted from the current user")
+        console.log("Metric with timestamp " + timestamp + " deleted from the current user")
         callback(err, result)
     });
   }

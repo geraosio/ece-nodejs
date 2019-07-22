@@ -9,13 +9,37 @@
     </header>
     
     <main class="p-2">
-      <form class="metric-value-form" action="/metrics" method="post">
-        <div class="form-group mb-0">
-          <label class="mb-0" for="form-metric-value">Metric Value:</label>
-          <input id="form-metric-value" type="text" name="metric_value" />
+      <div class="alerts-container"></div>
+      <div class="metrics-container">
+        <form class="metrics-new" action="/metrics" method="post">
+          <div class="card text-center">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Add new metric</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <span class="text-muted">Enter a numeric value</span>
+                <label class="sr-only" for="form-metric-value">Metric Value:</label>
+                <input class="form-control" id="form-metric-value" type="text" name="metric_value" placeholder="Value" />
+              </div>
+              <button class="btn btn-primary" type="submit">Add Metric</button>
+            </div>
+          </div>
+        </form>
+        <div class="metrics-all-container">
+          <% if (metrics) metrics.reverse().forEach(function(metric) { %>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><%= metric.value %></h5>
+                <a href=<%= "/metrics/" + metric.timestamp %> class="card-link link-danger" id="delete-metric" data-value=<%= metric.value %>>Delete</a>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted"><%= moment(parseInt(metric.timestamp)).fromNow() %></small>
+              </div>
+            </div>
+          <% }); %>
         </div>
-        <button class="btn btn-primary" type="submit">Add Metric</button>
-      </form>
+      </div>
       
       <canvas id="myChart"></canvas>
     </main>

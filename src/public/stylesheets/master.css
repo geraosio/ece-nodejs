@@ -75,6 +75,36 @@
 
 
 /*
+ * Metrics
+ */
+ 
+.metrics-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.metrics-new {
+  margin-right: 1em;
+  flex-shrink: 0;
+}
+
+.metrics-all-container {
+  overflow: auto;
+  white-space: nowrap;
+  align-self: center;
+}
+
+.metrics-all-container .card {
+  width: 150px;
+  margin-right: 1em;
+  display: inline-block;
+}
+
+
+
+
+
+/*
  * Other
  */
 
@@ -87,9 +117,4 @@
 
 .link-danger {
   color: #c82333;
-}
-
-.metric-value-form {
-  display: flex;
-  align-items: center;
 }
