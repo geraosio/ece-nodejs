@@ -81,7 +81,7 @@
 .metrics-container {
   display: flex;
   flex-direction: row;
-  margin-bottom: 1em;
+  margin-bottom: 2em;
 }
 
 .metrics-new {

@@ -43,12 +43,12 @@ $.getJSON("/metrics", {}, (data) => {
     var ctx = document.getElementById('myChart').getContext('2d');
     
     var myChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'line',
       data: {
-        labels: values,
+        labels: times,
         datasets: [{
           label: '',
-          data: times,
+          data: values,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -69,12 +69,8 @@ $.getJSON("/metrics", {}, (data) => {
         }]
       },
       options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
+        legend: {
+          display: false
         }
       }
     });
