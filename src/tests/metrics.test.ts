@@ -28,15 +28,13 @@ describe('Metrics', () => {
     clientDb.close()
   })
 
-  // ...
-})
-
-describe('/get', () =>  {
-  it('should get empty array', function() {
-    dbMet.get(function(err: Error | null, result?: Metric[]) {
-      expect(err).to.be.null
-      expect(result).to.not.be.undefined
-      expect(result).to.be.empty
+  describe('/getFromValue', () =>  {
+    it('should get empty array', function() {
+      dbMet.getFromValue({value: 18}, function(err: Error | null, result?: Metric[]) {
+        expect(err).to.be.null
+        expect(result).to.not.be.undefined
+        expect(result).to.be.empty
+      })
     })
   })
 })
