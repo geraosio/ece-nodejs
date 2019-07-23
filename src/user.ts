@@ -57,7 +57,7 @@ export class UserHandler {
     
     collection.insertOne(user, function (err: any, result: any) {
       if (err) return callback(err)
-      console.log("User inserted into the collection")
+      console.log("User \"" + user.username + "\" saved in the database")
       callback(err)
     })
   }
